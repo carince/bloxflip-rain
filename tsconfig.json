@@ -1,0 +1,34 @@
+{
+    "ts-node": {
+        "swc": true,
+    },
+    "compilerOptions": {
+        "strict": true,
+        "outDir": "./dist",
+        "rootDir": ".",
+        "baseUrl": ".",
+        "module": "CommonJS",
+        "target": "ESNext",
+        "newLine": "LF",
+        "moduleResolution": "NodeNext",
+        "resolveJsonModule": true,
+        "useUnknownInCatchVariables": true,
+        "allowUnreachableCode": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "strictPropertyInitialization": false,
+        "incremental": true,
+        "isolatedModules": true
+    },
+    "include": [
+        "**/**/*"
+    ],
+    "exclude": [
+        "/.github",
+        "./dist",
+        "./node_modules"
+    ]
+}

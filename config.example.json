@@ -1,0 +1,14 @@
+{
+    // Minimum robux to notify
+    "minimum": 0,
+    // Loop delay in milliseconds
+    "delay": 5000,
+    // Toggle OS notifications
+    "os_notifs": true,
+    "webhook": {
+        // Toggle webhook embeds
+        "enabled": false,
+        // Discord webhook link
+        "link": ""
+    }
+}
