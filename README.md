@@ -1,5 +1,5 @@
 <h1 align="center">bloxflip-rain</h1>
-<p align="center">Bloxflip rain notifier seperate from the [bloxflip-autocrash](https://github.com/Norikiru/bloxflip-autocrash "bloxflip-autocrash") repo.</p>
+<p align="center">Bloxflip rain notifier seperate from the <a href="https://github.com/Norikiru/bloxflip-autocrash">bloxflip-autocrash</a> repo.</p>
 
 <p align="center"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/Norikiru/bloxflip-rain?color=yellow&style=flat-square"> <img alt="GitHub forks" src="https://img.shields.io/github/forks/Norikiru/bloxflip-rain?style=flat-square"> <img alt="GitHub issues" src="https://img.shields.io/github/issues/Norikiru/bloxflip-rain?style=flat-square"></p>
 
