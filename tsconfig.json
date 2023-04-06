@@ -7,7 +7,7 @@
         "outDir": "./dist",
         "rootDir": ".",
         "baseUrl": ".",
-        "module": "CommonJS",
+        "module": "ESNext",
         "target": "ESNext",
         "newLine": "LF",
         "moduleResolution": "NodeNext",

@@ -1,9 +1,11 @@
-import { launch, Browser, Page } from "puppeteer";
-import { notify } from "node-notifier";
-import { parse } from "json5";
+import nodeNotifier from "node-notifier";
+import json5 from "json5";
 import chalk from "chalk";
+import fetch from "node-fetch";
 import { readFileSync } from "fs";
-import { join } from "path";
+const { notify } = nodeNotifier;
+const { parse } = json5;
+
 
 class Logger {
     public static log(type: string, info: string): void {
@@ -38,7 +40,7 @@ class Logger {
     let config: configInt;
 
     try {
-        config = parse(readFileSync(join(__dirname, "config.json"), "utf-8"));
+        config = parse(readFileSync("./config.json", { encoding: "utf8" }));
 
         if (config.delay < 1000) {
             Logger.error("CONFIG", "Delay cant be lower than 1 second.");
@@ -51,16 +53,10 @@ class Logger {
         }
 
         Logger.log("CONFIG", "Successfully parsed config");
-    } catch {
-        Logger.error("CONFIG", "Unable to parse config");
+    } catch (err) {
+        Logger.error("CONFIG", `Unable to parse config\n ${err}`);
         return;
     }
-
-    const browser: Browser = await launch({ headless: true });
-    const page: Page = (await browser.pages())[0];
-    await page.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44");
-    await page.setBypassCSP(true);
-    await page.goto("https://github.com/Norikiru/bloxflip-rain");
 
     Logger.log("RAIN", "\tStarting rain notifier...");
 
@@ -68,18 +64,13 @@ class Logger {
     let notified = false;
     for (let i = 0; i < Infinity; i++) {
         try {
-            const bfRes = await page.evaluate(() => {
-                return fetch("https://rest-bf.blox.land/chat/history").then(res => res.json());
-            });
+            const bfRes: any = await (await fetch("https://rest-bf.blox.land/chat/history")).json();
 
             if (bfRes.rain.active) {
                 if (!notified) {
-                    const rainHost: string = bfRes.rain.host;
-                    const hostId = await page.evaluate((rainHost: string) => {
-                        return fetch(`https://api.roblox.com/users/get-by-username?username=${rainHost}`).then(res => res.json()).then(res => res.Id);
-                    }, rainHost);
-
                     if (bfRes.rain.prize >= config.minimum) {
+                        Logger.log("RAIN", `Rain Detected \nRobux: ${bfRes.rain.prize} R$ \nHost: ${bfRes.rain.host} \nTime Remaining: ${bfRes.rain.duration / 60000} minutes`);
+
                         if (config.os_notifs) {
                             notify({
                                 title: "Bloxflip Rain Notifier",
@@ -115,24 +106,19 @@ class Logger {
                                         ],
                                         "footer": {
                                             "text": "bloxflip-rain"
-                                        },
-                                        "thumbnail": {
-                                            "url": `https://www.roblox.com/headshot-thumbnail/image?userId=${hostId}&width=720&height=720`
                                         }
                                     }
                                 ]
                             };
 
-                            await page.evaluate(async (embed: any, webhookLink: string) => {
-                                await fetch(webhookLink, {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                        "Accept": "application/json"
-                                    },
-                                    body: JSON.stringify(embed)
-                                });
-                            }, embed, webhookLink);
+                            await fetch(webhookLink, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "Accept": "application/json"
+                                },
+                                body: JSON.stringify(embed)
+                            });
                         }
                     } else {
                         Logger.warn("RAIN", "\tPrize is not greater or equal than the minimum value set in the config, ignoring...");
